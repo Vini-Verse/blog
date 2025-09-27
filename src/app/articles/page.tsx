@@ -10,10 +10,6 @@ export default async function ArticlesPage() {
       <h1 className="mb-16 mt-4 text-center text-5xl max-sm:text-4xl">
         Articles
       </h1>
-
-      {/* TODO: add tags filter (OR between all selections)
-      <p>{JSON.stringify(getAllTags())}</p> */}
-
       <section className="flex flex-col divide-y divide-zinc-400 overflow-hidden rounded ring-1 ring-zinc-400 dark:divide-zinc-500 dark:ring-zinc-500">
         {articles.map((article: Article) => (
           <Link

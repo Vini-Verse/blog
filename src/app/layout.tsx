@@ -3,13 +3,11 @@ import { Karla } from "next/font/google";
 import Link from "next/link";
 import "./globals.css";
 import { ScrollToTop } from "../components/scroll-to-top";
-import Script from "next/script";
 import dynamic from "next/dynamic";
-// import { Analytics } from "@vercel/analytics/next";
 
 export const metadata: Metadata = {
-  title: "Luke Berry",
-  description: "Luke Berry's personal website",
+  title: "Vinicius Martins",
+  description: "Vinicius Martins personal website",
 };
 
 const karla = Karla({
@@ -17,7 +15,6 @@ const karla = Karla({
   weight: "400",
 });
 
-// https://www.reddit.com/r/nextjs/comments/1bhfikg/comment/kxwj9ou/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
 const Header = dynamic(() => import("./Header"), { ssr: false });
 
 export default function RootLayout({
@@ -52,7 +49,6 @@ export default function RootLayout({
         />
       </head>
       <body className={`${karla.className} min-h-full px-6`}>
-        {/*<Analytics />*/}
         <Header />
         <main className="mx-auto max-w-prose pb-4">
           {children}
@@ -62,29 +58,19 @@ export default function RootLayout({
           <div className="flex items-center gap-4">
             <a
               className="decoration-zinc-500 underline-offset-4 transition-transform sm:hover:underline dark:decoration-zinc-400"
-              href="https://github.com/LukeberryPi/blog"
+              href="https://github.com/ViniciusSouzaMartins/blog"
               target="_blank"
             >
               Code
             </a>
-            <Link
-              className="decoration-zinc-500 underline-offset-4 transition-transform sm:hover:underline dark:decoration-zinc-400"
-              target="_blank"
-              href="/rss.xml"
-            >
-              RSS Feed
-            </Link>
             <a
               className="decoration-zinc-500 underline-offset-4 transition-transform sm:hover:underline dark:decoration-zinc-400"
-              href="https://x.com/LukeberryPi"
+              href="https://x.com/ViniVerseDev"
               target="_blank"
             >
-              @LukeberryPi
+              @ViniVerseDev
             </a>
           </div>
-          <blockquote className="text-zinc-800 dark:text-zinc-300">
-            Smile, you&apos;re alive :)
-          </blockquote>
         </footer>
       </body>
     </html>

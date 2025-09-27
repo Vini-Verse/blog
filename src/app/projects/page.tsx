@@ -12,7 +12,7 @@ interface Project {
 }
 
 const projects: Project[] = [
-  {
+ /* {
     name: "css2wind",
     description:
       "Learn TailwindCSS by playing a minigame: there are eight CSS properties that you must translate to the equivalent TailwindCSS utility. Bet you can't get 8/8.",
@@ -74,7 +74,7 @@ const projects: Project[] = [
         </span>
       </div>
     ),
-  },
+  },*/
 ];
 
 function ProjectCard({

@@ -7,7 +7,6 @@ export function Article({ html }: { html: string }) {
   const handleFormatCode = () => {
     const codes = document.querySelectorAll("pre code");
     codes.forEach((code) => {
-      // if (code.innerHTML.includes("span")) return;
       const html = highlight(code.textContent as string);
       code.innerHTML = html;
     });
