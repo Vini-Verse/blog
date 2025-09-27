@@ -1,5 +1,7 @@
 export default function AboutPage() {
   return (
+      <div></div>
+    );
     {/*<>
       <h1 className="mb-16 mt-4 text-center text-5xl max-sm:text-4xl">
         About me
@@ -86,5 +88,4 @@ export default function AboutPage() {
         </p>
       </article>
     </>*/}
-  );
 }
