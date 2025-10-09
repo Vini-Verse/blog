@@ -54,7 +54,7 @@ const externalLinks: Link[] = [
   {
     name: "GitHub",
     description: "steal my code",
-    url: "https://github.com/ViniciusSouzaMartins",
+    url: "https://github.com/Vini-Verse",
     icon: <SiGithub />,
   },
   {

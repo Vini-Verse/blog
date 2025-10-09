@@ -58,7 +58,7 @@ export default function RootLayout({
           <div className="flex items-center gap-4">
             <a
               className="decoration-zinc-500 underline-offset-4 transition-transform sm:hover:underline dark:decoration-zinc-400"
-              href="https://github.com/ViniciusSouzaMartins/blog"
+              href="https://github.com/Vini-Verse/blog"
               target="_blank"
             >
               Code
