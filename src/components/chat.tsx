@@ -1,12 +1,12 @@
 "use client"
 import { HubConnectionBuilder, HubConnection } from "@microsoft/signalr"
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
+import { Card } from "@/components/ui/card"
 import { Textarea } from "@/components/ui/textarea"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { SendHorizonal, Send, Download } from "lucide-react"
+import { SendHorizonal } from "lucide-react"
 import { getLanguage } from "../lib/language"
 
 const SUGGESTIONS_EN = [
@@ -54,75 +54,75 @@ const LOCALES: Record<LangKey, Locale> = {
 
 export default function ChatWidget() {
   const pathname = usePathname()
-  const [open, setOpen] = useState(false)
   const [messages, setMessages] = useState<string[]>([])
   const [input, setInput] = useState("")
   const [lang, setLang] = useState(getLanguage())
-  const rootRef = useRef<HTMLDivElement | null>(null)
   const scrollRef = useRef<HTMLDivElement>(null)
   const connectionRef = useRef<HubConnection | null>(null)
   const [loadingBot, setLoadingBot] = useState(false);
-  // show chat only on homepage
-  
-  
-
-  const removeLoadingBot = useCallback(() => {
-    if(loadingBot){
-      messages[messages.length - 1] = messages[messages.length - 1].replace('.', ''); // remove os pontos de loading
-      setMessages([...messages]);
-    }
-    setLoadingBot(false);
-  }, [loadingBot]);
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   const sendMessage = () => {
-        if (!input.trim()) return;
-        setMessages(prev => [...prev, `you::${input}`, `bot::`]); // adiciona placeholder
-        setLoadingBot(true);
-        connectionRef.current?.invoke("SendMessage", input, getLanguage() == 'pt-BR');
-        setInput("");
-    };
-    useEffect(() => {
-        if (!loadingBot) return;
+    if (!input.trim()) return;
+    setMessages(prev => [...prev, `you::${input}`, `bot::.`]); // começa com um ponto
+    setLoadingBot(true);
+    connectionRef.current?.invoke("SendMessage", input, getLanguage() == 'pt-BR');
+    setInput("");
+  };
 
-        let count = 0;
-        const interval = setInterval(() => {
-            setMessages(prev => {
-                const last = prev[prev.length - 1] || "";
-                if (last.startsWith("bot::")) {
-                    const dots = ".".repeat((count % 3) + 1);
-                    const newText = `bot::${dots}`;
-                    count++;
-                    return [...prev.slice(0, -1), newText];
-                }
-                return prev;
-            });
-        }, 500);
-
-        return () => clearInterval(interval);
-    }, [loadingBot]);
-    useEffect(() => {
-        const conn = new HubConnectionBuilder()
-            .withUrl("https://chatbotresume.viniverse.dev/chat")
-            .withAutomaticReconnect()
-            .build()
-
-        connectionRef.current = conn
-
-        conn.start().catch(err => console.error("SignalR connection error:", err))
-
-        conn.on("ReceiveMessage", (message: string) => {
-            removeLoadingBot();
-            setMessages(prev => {
-                const last = prev[prev.length - 1] || "";
-                if (last.startsWith("bot::")) 
-                    return [...prev.slice(0, -1), last + message];                
-                return [...prev, `bot::${message}`];
-            });
-        })
-        return () => {
-            conn.stop()
+  // Animação de loading (pontos)
+  useEffect(() => {
+    if (!loadingBot) return;
+    let count = 0;
+    const interval = setInterval(() => {
+      setMessages(prev => {
+        const last = prev[prev.length - 1] || "";
+        // Só anima se for mensagem de loading (apenas pontos)
+        if (last.match(/^bot::\.*$/)) {
+          const dots = ".".repeat((count % 3) + 1);
+          count++;
+          return [...prev.slice(0, -1), `bot::${dots}`];
         }
-    }, [removeLoadingBot])
+        return prev;
+      });
+    }, 500);
+    return () => clearInterval(interval);
+  }, [loadingBot]);
+
+  // SignalR connection
+  useEffect(() => {
+    const conn = new HubConnectionBuilder()
+      .withUrl("https://chatbotresume.viniverse.dev/chat")
+      .withAutomaticReconnect()
+      .build()
+    
+    connectionRef.current = conn
+    conn.start().catch(err => console.error("SignalR connection error:", err))
+    
+    conn.on("ReceiveMessage", (message: string) => {
+      setLoadingBot(false);
+      
+      setMessages(prev => {
+        const last = prev[prev.length - 1] || "";
+        
+        // Se é mensagem de loading (apenas pontos), substitui pela resposta real
+        if (last.match(/^bot::\.*$/)) {
+          return [...prev.slice(0, -1), `bot::${message}`];
+        }
+        
+        // Se já tem conteúdo real, concatena
+        if (last.startsWith("bot::")) {
+          return [...prev.slice(0, -1), last + message];
+        }
+        
+        return [...prev, `bot::${message}`];
+      });
+    })
+    
+    return () => {
+      conn.stop()
+    }
+  }, [])
 
   const clearChat = () => {
     setMessages([])
@@ -131,6 +131,10 @@ export default function ChatWidget() {
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" })
   }, [messages])
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "auto" });
+  }, [messages]);
 
   useEffect(() => {
     function onLang(e: Event) {
@@ -142,12 +146,10 @@ export default function ChatWidget() {
     return () => window.removeEventListener('app:language-changed', onLang as EventListener)
   }, [])
 
-    const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  if (pathname !== "/") return null
 
-    useEffect(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "auto" });
-    }, [messages]);
-    if (pathname !== "/") return null
+  // ... resto do componente
+
   return (
     <div className="h-full">
       <Card className="w-full h-full flex flex-col shadow-2xl border bg-white dark:bg-zinc-900 dark:border-zinc-700">
