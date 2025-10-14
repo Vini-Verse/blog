@@ -54,8 +54,6 @@ const LOCALES: Record<LangKey, Locale> = {
 
 export default function ChatWidget() {
   const pathname = usePathname()
-  // show chat only on homepage
-  if (pathname !== "/") return null
   const [open, setOpen] = useState(false)
   const [messages, setMessages] = useState<string[]>([])
   const [input, setInput] = useState("")
@@ -64,6 +62,9 @@ export default function ChatWidget() {
   const scrollRef = useRef<HTMLDivElement>(null)
   const connectionRef = useRef<HubConnection | null>(null)
   const [loadingBot, setLoadingBot] = useState(false);
+  // show chat only on homepage
+  
+  
 
   const removeLoadingBot = useCallback(() => {
     if(loadingBot){
@@ -146,7 +147,7 @@ export default function ChatWidget() {
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: "auto" });
     }, [messages]);
-
+    if (pathname !== "/") return null
   return (
     <div className="h-full">
       <Card className="w-full h-full flex flex-col shadow-2xl border bg-white dark:bg-zinc-900 dark:border-zinc-700">
