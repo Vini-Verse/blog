@@ -196,7 +196,7 @@ export default function ChatWidget() {
             </div>
           )}
 
-          <div className="flex flex-col gap-2 p-4 border-t dark:border-zinc-800">
+          <div className="flex flex-col gap-2 p-0 sm:p-4 border-t dark:border-zinc-800">
             <div className="flex justify-between items-center ">
               <Button 
                 variant="ghost" 
@@ -207,7 +207,7 @@ export default function ChatWidget() {
               >
                 {lang === 'pt-BR' ? 'Limpar chat' : 'Clear chat'}
               </Button>
-              <p className="text-xs text-zinc-400 dark:text-zinc-500">
+              <p className="text-xs px-1 sm:p-2 text-zinc-400 dark:text-zinc-500">
                 {lang === 'pt-BR' ? 'Pressione enter para enviar' : 'Press Enter to send'}
               </p>
             </div>
