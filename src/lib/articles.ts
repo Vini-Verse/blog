@@ -4,6 +4,8 @@ import path from "path";
 import moment from "moment";
 import { remark } from "remark";
 import html from "remark-html";
+import { getLanguage } from "./language";
+import 'moment/locale/pt-br';
 
 export type Article = {
   id: string;
@@ -34,10 +36,10 @@ export function getAllTags() {
   return Array.from(tags);
 }
 
-export function getArticles() {
+export function getArticles(lang: string = "en"){
   const files = fs.readdirSync(ARTICLES_DIR);
 
-  const allArticlesData = files.map((file) => {
+  const allArticlesData = files.filter(x=>x.includes(lang)).map((file) => {
     const id = file.replace(/\.md$/, "");
     const fullPath = path.join(ARTICLES_DIR, file);
     const fileContents = fs.readFileSync(fullPath, "utf-8");
@@ -63,6 +65,7 @@ export function getArticles() {
 }
 
 export async function getArticleData(id: string) {
+  const lang = id.includes('pt-BR') ? 'pt-br' : 'en'
   const fullPath = path.join(ARTICLES_DIR, `${id}.md`);
   const fileContents = fs.readFileSync(fullPath, "utf-8");
   const matterResult = matter(fileContents);
@@ -70,13 +73,12 @@ export async function getArticleData(id: string) {
     .use(html)
     .process(matterResult.content);
   const contentHtml = processedContent.toString();
-
   return {
     id,
     contentHtml,
     title: matterResult.data.title,
     tags: matterResult.data.tags || [],
     location: matterResult.data.location || "",
-    date: moment(matterResult.data.date, "YYYY-MM-DD").format("MMMM  Do, YYYY"),
+    date: moment(matterResult.data.date, "YYYY-MM-DD").locale(lang).format("MMMM  Do, YYYY"),
   };
 }

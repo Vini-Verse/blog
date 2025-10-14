@@ -1,3 +1,4 @@
+'use client'
 import {
   SiGithub,
   SiLinkedin,
@@ -5,6 +6,9 @@ import {
 import { ArrowUpRight, Download, Send } from "lucide-react";
 import Link from "next/link";
 import { ReactNode } from "react";
+import { getLanguage } from "../lib/language";
+import { useEffect, useState } from "react";
+import ChatWidget from "../components/chat";
 
 const XLogo = () => {
   return (
@@ -44,7 +48,7 @@ interface Link {
   icon?: ReactNode;
 }
 
-const externalLinks: Link[] = [
+const LINKS_EN = [
   {
     name: "LinkedIn",
     description: "follow my career",
@@ -63,7 +67,28 @@ const externalLinks: Link[] = [
     url: "https://x.com/viniversedev",
     icon: <XLogo />,
   }
-];
+]
+
+const LINKS_PT = [
+  {
+    name: "LinkedIn",
+    description: "acompanhe minha carreira",
+    url: "https://linkedin.com/in/ViniciusSouzaMartins",
+    icon: <SiLinkedin className="fill-[#0077B5] dark:fill-zinc-200" />,
+  },
+  {
+    name: "GitHub",
+    description: "veja meu código",
+    url: "https://github.com/Vini-Verse",
+    icon: <SiGithub />,
+  },
+  {
+    name: "X (antigo Twitter)",
+    description: "leia meus pensamentos",
+    url: "https://x.com/viniversedev",
+    icon: <XLogo />,
+  }
+]
 
 const ExternalLink = (link: Link) => {
   return (
@@ -88,18 +113,35 @@ const ExternalLink = (link: Link) => {
 };
 
 export default function HomePage() {
+  const [lang, setLang] = useState(getLanguage())
+
+  useEffect(() => {
+    function onLang(e: Event) {
+      // @ts-ignore
+      setLang(e?.detail?.language || getLanguage())
+    }
+    window.addEventListener('app:language-changed', onLang as EventListener)
+    return () => window.removeEventListener('app:language-changed', onLang as EventListener)
+  }, [])
+
+  const LINKS = lang === 'pt-BR' ? LINKS_PT : LINKS_EN
+
   return (
     <div className="flex flex-col gap-6">
       <p className="text-sm">
-        Software Engineer from São Paulo, Brazil, passionate about backend. 
-        I’ve been studying technology for 5 years and working in the field for 4. 
-        My journey started early: back in 2012, at age 11, I built my own Transformice server. 
-        Today, I have solid experience with .NET and enjoy designing robust and scalable systems.
+        {lang === 'pt-BR' ? (
+          'Software Engineer de São Paulo, Brasil, apaixonado por backend. Tenho estudado tecnologia por 5 anos e trabalho na área há 4. Minha jornada começou cedo: em 2012, com 11 anos, montei meu próprio servidor de Transformice. Hoje tenho experiência sólida com .NET e gosto de projetar sistemas robustos e escaláveis.'
+        ) : (
+          'Software Engineer from São Paulo, Brazil, passionate about backend. I’ve been studying technology for 5 years and working in the field for 4. My journey started early: back in 2012, at age 11, I built my own Transformice server. Today, I have solid experience with .NET and enjoy designing robust and scalable systems.'
+        )}
       </p>
       <div className="divide-y divide-zinc-400 overflow-hidden rounded ring-1 ring-zinc-400 dark:divide-zinc-500 dark:ring-zinc-500">
-        {externalLinks.map((link: Link) => (
+        {LINKS.map((link: Link) => (
           <ExternalLink key={link.url} {...link} />
         ))}
+      </div>
+      <div className="h-[340px]">
+        <ChatWidget />
       </div>
       <div className="flex justify-center gap-6 max-sm:flex-col-reverse sm:justify-between">
         <div className="flex flex-col justify-center gap-4 max-sm:items-center">
@@ -116,7 +158,7 @@ export default function HomePage() {
           </div>
           <span className="-mt-2 inline-flex w-fit items-center gap-1 rounded-full bg-green-100 px-2 py-0.5 text-sm text-green-600 ring-1 ring-green-500 dark:bg-transparent dark:text-emerald-500 dark:ring-emerald-500">
             <div className="size-2 animate-pulse rounded-full bg-green-500 dark:bg-emerald-500" />
-            Online
+            {lang === 'pt-BR' ? 'Online' : 'Online'}
           </span>
         </div>
         <div className="flex flex-col gap-2">
@@ -125,7 +167,7 @@ export default function HomePage() {
             download="Vinicius-Martins-CV.pdf"
             className="flex flex-row items-center justify-center gap-3 rounded bg-sky-300 p-4 text-sky-800 ring-1 ring-sky-500 transition-transform sm:hover:bg-sky-400 dark:bg-inherit dark:text-sky-500 dark:ring-sky-500 sm:sm:dark:hover:bg-zinc-800"
           >
-            <span className="text-nowrap">Download my CV</span>
+            <span className="text-nowrap">{lang === 'pt-BR' ? 'Baixar meu CV' : 'Download my CV'}</span>
             <Download strokeWidth={1.4} className="size-5 max-sm:hidden" />
           </a>
         </div>

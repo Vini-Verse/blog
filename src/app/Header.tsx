@@ -1,9 +1,10 @@
 "use client";
 
-import { ChevronLeft, Moon, Sun, Triangle } from "lucide-react";
+import { ChevronLeft, Globe, Moon, Sun, Triangle } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { getLanguage, setLanguage } from "../lib/language";
 
 function isThemeSetToDark() {
   if (window == undefined) return;
@@ -19,6 +20,7 @@ export default function Header() {
   const path = usePathname();
   const isHome = path === "/";
   const [isDarkMode, setIsDarkMode] = useState(isThemeSetToDark());
+  const [language, setCurrentLanguage] = useState(getLanguage());
 
   useEffect(() => {
     if (isThemeSetToDark()) {
@@ -26,6 +28,15 @@ export default function Header() {
     } else {
       document.documentElement.classList.remove("dark");
     }
+    document.documentElement.lang = language === 'pt-BR' ? 'pt-BR' : 'en';
+
+    function onLang(e: Event) {
+      // @ts-ignore
+      setCurrentLanguage(e?.detail?.language || getLanguage())
+    }
+
+    window.addEventListener('app:language-changed', onLang as EventListener)
+    return () => window.removeEventListener('app:language-changed', onLang as EventListener)
   }, []);
 
   const toggleTheme = () => {
@@ -38,6 +49,12 @@ export default function Header() {
       document.documentElement.classList.add("dark");
       setIsDarkMode(true);
     }
+  };
+
+  const toggleLanguage = () => {
+    const newLanguage = language === 'en' ? 'pt-BR' : 'en';
+    setLanguage(newLanguage);
+    setCurrentLanguage(newLanguage);
   };
 
   return (
@@ -56,35 +73,50 @@ export default function Header() {
           <div className="flex flex-col max-sm:items-center">
             Vinicius Martins
             <span className="text-zinc-500 dark:text-zinc-400">
-              Software Engineer
+              {language === 'en' ? 'Software Engineer' : 'Engenheiro de Software'}
             </span>
           </div>
         </Link>
         <div className="flex items-center gap-4">
-          <button
-            onClick={() => toggleTheme()}
-            className="group relative flex items-center"
-            aria-label="Toggle theme"
-          >
-            {isDarkMode ? (
-              <Moon
+          <div className="flex items-center gap-2">
+            {isHome && (
+              <button
+              onClick={toggleLanguage}
+              className="group relative flex items-center"
+              aria-label="Toggle language"
+            >
+              <Globe
                 strokeWidth={1.4}
-                className="size-5 fill-gray-700 transition-transform"
+                className="size-5 transition-transform sm:hover:rotate-45"
               />
-            ) : (
-              <Sun
-                strokeWidth={1.4}
-                className="size-5 fill-yellow-300 transition-transform sm:hover:rotate-45"
-              />
+              <span className="ml-1 text-sm">{language === 'en' ? 'EN' : 'PT'}</span>
+            </button>
             )}
-          </button>
+            <button
+              onClick={() => toggleTheme()}
+              className="group relative flex items-center"
+              aria-label="Toggle theme"
+            >
+              {isDarkMode ? (
+                <Moon
+                  strokeWidth={1.4}
+                  className="size-5 fill-gray-700 transition-transform"
+                />
+              ) : (
+                <Sun
+                  strokeWidth={1.4}
+                  className="size-5 fill-yellow-300 transition-transform sm:hover:rotate-45"
+                />
+              )}
+            </button>
+          </div>
           <Link
             className="group relative rounded px-2 py-px sm:hover:ring-1 ring-sky-500 transition-transform dark:ring-sky-600 dark:ring-opacity-0"
-            href="/articles"
+            href={`/articles?lang=${language}`}
             aria-label="View articles"
             aria-current={path.startsWith("/articles") ? "page" : undefined}
           >
-            /articles
+            {language === 'en' ? '/Articles' : '/Artigos'}
             <Triangle
               aria-hidden="true"
               className="absolute left-1/2 mt-1 hidden size-2 fill-sky-500 text-zinc-800 group-aria-[current=page]:block dark:fill-sky-600 dark:text-transparent"

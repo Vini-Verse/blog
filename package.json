@@ -11,7 +11,12 @@
   },
   "dependencies": {
     "@icons-pack/react-simple-icons": "^9.5.0",
+    "@microsoft/signalr": "^9.0.6",
+    "@radix-ui/react-scroll-area": "^1.2.10",
+    "@radix-ui/react-slot": "^1.2.3",
     "@vercel/analytics": "^1.5.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "dotenv": "^16.4.5",
     "gray-matter": "^4.0.3",
     "lucide-react": "^0.395.0",
@@ -22,7 +27,9 @@
     "remark": "^15.0.1",
     "remark-html": "^16.0.1",
     "rss": "^1.2.2",
-    "sugar-high": "^0.7.0"
+    "sugar-high": "^0.7.0",
+    "tailwind-merge": "^3.3.1",
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@types/node": "^20",

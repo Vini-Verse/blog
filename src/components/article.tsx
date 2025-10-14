@@ -17,6 +17,7 @@ export function Article({ html }: { html: string }) {
     });
 
     const links = document.querySelectorAll("article a") as NodeListOf<HTMLAnchorElement>;
+
     links.forEach((link) => {
       link.target = "_blank";
       link.rel = "noopener noreferrer";

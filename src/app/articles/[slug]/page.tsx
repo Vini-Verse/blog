@@ -12,7 +12,7 @@ function Tag({ tag }: { tag: string }) {
 export default async function ArticlePage({
   params,
 }: {
-  params: { slug: string };
+  params: { slug: string};
 }) {
   let articleData;
   try {

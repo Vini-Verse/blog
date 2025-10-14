@@ -16,6 +16,7 @@ const karla = Karla({
 });
 
 const Header = dynamic(() => import("./Header"), { ssr: false });
+const ChatWidget = dynamic(() => import("../components/chat"), { ssr: false });
 
 export default function RootLayout({
   children,
@@ -50,10 +51,12 @@ export default function RootLayout({
       </head>
       <body className={`${karla.className} min-h-full px-6`}>
         <Header />
-        <main className="mx-auto max-w-prose pb-4">
-          {children}
-          <ScrollToTop />
-        </main>
+        <div className="relative">
+          <main className="mx-auto max-w-prose pb-4">
+            {children}
+            <ScrollToTop />
+          </main>
+        </div>
         <footer className="mx-auto flex max-w-prose flex-col max-sm:items-start items-center gap-2 py-6 text-sm text-zinc-500 dark:text-zinc-400">
           <div className="flex items-center gap-4">
             <a
