@@ -19,8 +19,6 @@ In this article we will discover what observability is, why it is important for 
 
 ## Fundamental Concepts
 
-![The three pillars of observability: Logs, Metrics and Traces](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/wx00w33jfge68u37c2w5.png)
-
 Observability rests on three pillars: logs, traces and metrics. I will briefly explain what each one means.
 
 **Logs** are detailed messages about events that occurred in the application, usually formatted as structured (JSON) or semi-structured text; they are used to diagnose errors and understand system behavior at specific moments. We can record errors or specific events with proper exception handling.
