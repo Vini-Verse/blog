@@ -92,7 +92,7 @@ export default function ChatWidget() {
   // SignalR connection
   useEffect(() => {
     const conn = new HubConnectionBuilder()
-      .withUrl("https://chatbotresume.viniverse.dev/chat")
+      .withUrl("https://www.chatbotresume.viniverse.dev/chat")
       .withAutomaticReconnect()
       .build()
     
